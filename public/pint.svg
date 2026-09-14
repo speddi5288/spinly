@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 470" fill="none">
+  <defs>
+    <linearGradient id="pint" x1="144" y1="243" x2="320" y2="390" gradientUnits="userSpaceOnUse"><stop stop-color="#c5e8b6"/><stop offset="1" stop-color="#8eb78b"/></linearGradient>
+    <linearGradient id="spoon" x1="329" y1="35" x2="350" y2="200" gradientUnits="userSpaceOnUse"><stop stop-color="#f0e9d7"/><stop offset="1" stop-color="#9caa98"/></linearGradient>
+    <linearGradient id="scoop" x1="193" y1="114" x2="273" y2="224" gradientUnits="userSpaceOnUse"><stop stop-color="#faf0d7"/><stop offset="1" stop-color="#d6c7a3"/></linearGradient>
+  </defs>
+  <ellipse cx="244" cy="409" rx="116" ry="15" fill="#0e1410" opacity=".5"/>
+  <circle cx="248" cy="226" r="168" stroke="#84957a" stroke-opacity=".15" stroke-dasharray="3 10"/>
+  <path d="m318 187 31-108c-18-12-15-29-8-45 6-15 16-24 25-21 10 4 13 17 8 34-4 16-12 29-21 31l-27 111Z" fill="url(#spoon)"/>
+  <path d="M361 23c-8 5-15 22-13 33" stroke="#fff9e8" stroke-width="2" stroke-linecap="round" opacity=".65"/>
+  <path d="M153 250h184l-23 129c-3 18-21 27-69 27-44 0-65-8-69-25Z" fill="url(#pint)"/>
+  <path d="m174 265 20 108" stroke="#e1f4d6" stroke-opacity=".55" stroke-width="5" stroke-linecap="round"/>
+  <ellipse cx="245" cy="250" rx="94" ry="28" fill="#739671"/>
+  <ellipse cx="245" cy="248" rx="88" ry="22" fill="#435b41"/>
+  <path d="M234 187c7-25 37-40 64-24 25 0 42 23 35 44 20 17 13 43-12 49-16 14-45 13-61 2-31 4-48-20-40-44-6-12 0-22 14-27Z" fill="#b8c797"/>
+  <path d="M295 175c17 1 25 14 22 26m-64-13c-14 3-19 12-17 23m74 18c9-8 18-4 19 4" stroke="#97ac7c" stroke-width="4" stroke-linecap="round"/>
+  <path d="M164 180c20-18 44-13 59 0 24-4 44 16 43 36 18 26 0 50-27 47-16 12-36 9-48-3-27 7-51-9-46-35-15-20-2-38 19-45Z" fill="#dcae9b"/>
+  <path d="M167 194c10-11 24-11 32-3m-35 41c-4 11 8 20 16 17m42-56c15-1 23 10 21 18" stroke="#c58f7f" stroke-width="4" stroke-linecap="round"/>
+  <path d="M184 155c-5-23 17-46 41-43 20-16 51-9 60 13 28 5 37 32 24 52 10 26-14 48-39 42-21 13-43 7-56-6-27 0-43-21-35-41-5-6-2-12 5-17Z" fill="url(#scoop)"/>
+  <path d="M193 150c0-15 12-26 26-22m24-9c12-3 24 4 28 12m-82 51c-3 12 8 22 19 21m73-60c14 1 23 12 18 23" stroke="#fff6e2" stroke-width="5" stroke-linecap="round"/>
+  <path d="m223 161 7 4m35 24 5-6m-28-40 2 6m-35 32 4-2m61-12 5 3" stroke="#968363" stroke-width="3" stroke-linecap="round"/>
+  <path d="m195 215 5 3m33 20 4-4m-67-15 5-2" stroke="#8c6152" stroke-width="3" stroke-linecap="round"/>
+  <path d="m290 218 4-3m25 25 5 2m-42-3 3-4" stroke="#576f46" stroke-width="3" stroke-linecap="round"/>
+  <path d="M151 251c5 17 47 29 94 29 48 0 89-12 93-29" stroke="#d4edc6" stroke-width="7" stroke-linecap="round"/>
+  <text x="245" y="328" fill="#28452e" font-family="Arial, sans-serif" font-size="40" font-weight="700" text-anchor="middle" letter-spacing="-2">spinly.</text>
+  <path d="M221 345h48" stroke="#476545" stroke-width="1"/>
+  <text x="245" y="365" fill="#345435" font-family="Arial, sans-serif" font-size="8" text-anchor="middle" letter-spacing="2">HAPPINESS BY THE PINT</text>
+  <path d="M99 158v20m-10-10h20m281 101v16m-8-8h16" stroke="#c2e9b7" stroke-width="1.5" stroke-linecap="round"/>
+  <circle cx="131" cy="323" r="3" fill="#c2e9b7"/>
+  <circle cx="376" cy="160" r="2" fill="#c2e9b7"/>
+  <path d="m96 272 7-5m243 79 10 4" stroke="#c2e9b7" stroke-width="2" stroke-linecap="round"/>
+</svg>
