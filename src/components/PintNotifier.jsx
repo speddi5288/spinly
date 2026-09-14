@@ -35,7 +35,7 @@ async function showReady(pintId) {
   markNotified(pintId)
 
   const title = `${pint.recipeTitle || 'Your pint'} is ready`
-  const options = { body: 'Time to spin.', tag: `spinly-pint-${pintId}`, icon: '/favicon.svg', data: { url: '/pints' } }
+  const options = { body: 'Time to spin.', tag: `spinly-pint-${pintId}`, icon: '/favicon.svg', data: { url: '/fridge' } }
   try {
     const registration = await navigator.serviceWorker?.getRegistration()
     if (registration) {

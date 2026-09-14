@@ -9,7 +9,7 @@ import { useRecipes } from '../lib/useRecipes.js'
 import { useNow, useUserData } from '../lib/userData.js'
 import '../styles/pints.css'
 
-export default function Pints() {
+export default function Fridge() {
   const { pints, notify } = useUserData()
   const { recipes, loading } = useRecipes()
   const now = useNow(30000)
@@ -49,7 +49,7 @@ export default function Pints() {
 
   return (
     <section className="page container pints-page" aria-labelledby="pints-title">
-      <h1 id="pints-title" className="page-title" ref={titleRef} tabIndex={-1}>Your <em>pints.</em></h1>
+      <h1 id="pints-title" className="page-title" ref={titleRef} tabIndex={-1}>Your <em>fridge.</em></h1>
       <p className="sr-only" role="status">{announcement}</p>
 
       <div className="panel pints-controls">

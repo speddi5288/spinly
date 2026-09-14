@@ -45,7 +45,7 @@ export default function Layout() {
             ))}
             <span className="nav-divider" aria-hidden="true" />
             <NavLink to="/pantry">Pantry</NavLink>
-            <NavLink to="/pints">Pints <ReadyCount /></NavLink>
+            <NavLink to="/fridge">Fridge <ReadyCount /></NavLink>
             <NavLink to="/saved">Saved</NavLink>
           </nav>
           {configured && (

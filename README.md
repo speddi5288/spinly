@@ -9,7 +9,7 @@ Ninja CREAMi pints, yogurt bowls, and smoothies, built with React, JavaScript, V
 - Recipe pages that name the right program for your machine (7-in-1, Deluxe, Scoop & Swirl), scale to your pint size, and switch between US and metric.
 - Starter recipes ship with the app, with nutrition calculated from USDA FoodData Central.
 - Pantry: pick what you have and see what you can make.
-- Pint log: 24-hour freeze countdown, calendar reminders, ratings, and notes.
+- Fridge: a pint log with a 24-hour freeze countdown, calendar reminders, ratings, and notes.
 - Saved recipes.
 - Accounts (optional): email sign-in, submit and edit your own recipes, and sync saved recipes, the pint log, and your machine across devices.
 
@@ -47,7 +47,7 @@ Add it to `src/data/starterRecipes.js` (CREAMi), `starterBowls.js`, or `starterS
 
 ## Layout
 
-- `src/pages/`: Home, Collection + Browse, RecipeDetail, Pantry, Pints, Saved, Auth, RecipeEditor
+- `src/pages/`: Home, Collection + Browse, RecipeDetail, Pantry, Fridge, Saved, Auth, RecipeEditor
 - `src/components/`: Layout, RecipeCard, RecipeForm, and page pieces
 - `src/lib/`: recipe normalization, machines, units, nutrition, pantry, pints, local storage, Supabase
 - `src/data/starterRecipes.js`: starter recipes

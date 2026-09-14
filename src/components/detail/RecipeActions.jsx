@@ -53,7 +53,7 @@ export default function RecipeActions({ recipe }) {
           <>
             <span className="status-dot" aria-hidden="true" />
             Ready {formatReady(loggedAt)}
-            <Link className="text-link" to="/pints">Pints <span aria-hidden="true">→</span></Link>
+            <Link className="text-link" to="/fridge">Fridge <span aria-hidden="true">→</span></Link>
           </>
         )}
       </p>
