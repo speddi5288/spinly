@@ -41,9 +41,11 @@ export default function RecipeActions({ recipe }) {
         <button type="button" className="filter-chip detail-save" aria-pressed={saved} onClick={() => userData.toggleFavorite(recipe.id)}>
           <HeartIcon filled={saved} /> Save
         </button>
-        <button type="button" className="button button-primary button-small detail-button" onClick={logPint}>
-          Froze a pint
-        </button>
+        {recipe.category === 'creami' && (
+          <button type="button" className="button button-primary button-small detail-button" onClick={logPint}>
+            Froze a pint
+          </button>
+        )}
         {canEdit && <Link className="text-link detail-edit" to={`/recipes/${recipe.id}/edit`}>Edit</Link>}
       </div>
       <p className="detail-confirm" role="status">

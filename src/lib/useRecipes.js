@@ -2,7 +2,7 @@ import { useEffect, useState, useSyncExternalStore } from 'react'
 import { STARTER_RECIPES, fromRow, getStarterRecipe } from './recipes.js'
 import { supabase } from './supabase.js'
 
-const COLUMNS = 'id, user_id, created_at, title, description, image_url, tub_size_oz, program, freeze_time_hours, freeze_note, respin_note, calories, protein, carbs, fat, ingredients, steps'
+const COLUMNS = 'id, user_id, created_at, category, title, description, image_url, tub_size_oz, program, freeze_time_hours, freeze_note, respin_note, calories, protein, carbs, fat, ingredients, steps'
 const PAGE_SIZE = 200
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 

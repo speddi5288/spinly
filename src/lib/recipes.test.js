@@ -162,7 +162,8 @@ test('findIngredientByName matches free-text names to the catalog', () => {
 
 test('findIngredientByName keeps plant-based names away from dairy and returns null for no match', () => {
   assert.equal(findIngredientByName('oat milk'), null)
-  assert.equal(findIngredientByName('almond milk'), null)
+  assert.equal(findIngredientByName('almond milk')?.id, 'almond-milk')
+  assert.equal(findIngredientByName('coconut yogurt'), null)
   assert.equal(findIngredientByName(''), null)
   assert.equal(findIngredientByName(null), null)
   assert.equal(findIngredientByName('dragon fruit'), null)

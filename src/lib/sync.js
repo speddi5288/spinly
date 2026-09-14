@@ -1,9 +1,11 @@
+import { isRating } from './ratings.js'
 import { supabase } from './supabase.js'
+import { refreshRatingStats } from './useRatings.js'
 import { getUserData, subscribeUserData, userData } from './userData.js'
 import { diffUserData, isEmptyDiff, mergeUserData } from './userDataModel.js'
 
 /*
- * Keeps a signed-in person's favorites, pint log, and machine/units in Supabase.
+ * Keeps a signed-in person's favorites, ratings, pint log, and machine/units in Supabase.
  * Local storage stays the source the UI reads; this mirrors it both ways at sign-in
  * and pushes each change afterwards.
  */
@@ -50,18 +52,21 @@ export function rowToPint(row) {
 
 // Queries --------------------------------------------------------------------
 
-/** The account's saved data, shaped for mergeUserData: { favorites, pints, machine, units }. */
+/** The account's saved data, shaped for mergeUserData: { favorites, ratings, pints, machine, units }. */
 export async function fetchRemoteUserData(userId) {
-  const [favorites, pints, profile] = await Promise.all([
+  const [favorites, ratings, pints, profile] = await Promise.all([
     supabase.from('favorites').select('recipe_id').eq('user_id', userId).order('created_at').range(0, MAX_ROWS - 1),
+    supabase.from('recipe_ratings').select('recipe_id, rating').eq('user_id', userId).range(0, MAX_ROWS - 1),
     supabase.from('pint_log').select(PINT_COLUMNS).eq('user_id', userId).order('frozen_at', { ascending: false }).range(0, MAX_ROWS - 1),
     supabase.from('profiles').select('machine, units').eq('id', userId).maybeSingle(),
   ])
   check(favorites)
+  check(ratings)
   check(pints)
   check(profile)
   return {
     favorites: favorites.data.map((row) => row.recipe_id),
+    ratings: Object.fromEntries(ratings.data.map((row) => [row.recipe_id, row.rating])),
     pints: pints.data.map(rowToPint),
     machine: profile.data?.machine ?? null,
     units: profile.data?.units ?? null,
@@ -77,6 +82,21 @@ async function upsertFavorites(userId, recipeIds) {
 async function deleteFavorites(userId, recipeIds) {
   if (!recipeIds.length) return
   check(await supabase.from('favorites').delete().eq('user_id', userId).in('recipe_id', recipeIds))
+}
+
+async function upsertRatings(userId, entries) {
+  const rows = entries
+    .filter(([recipeId, rating]) => isRecipeId(recipeId) && isRating(rating))
+    .map(([recipeId, rating]) => ({ user_id: userId, recipe_id: recipeId, rating }))
+  if (!rows.length) return false
+  check(await supabase.from('recipe_ratings').upsert(rows, { onConflict: 'user_id,recipe_id' }))
+  return true
+}
+
+async function deleteRatings(userId, recipeIds) {
+  if (!recipeIds.length) return false
+  check(await supabase.from('recipe_ratings').delete().eq('user_id', userId).in('recipe_id', recipeIds))
+  return true
 }
 
 async function upsertPints(userId, pints) {
@@ -96,21 +116,26 @@ async function upsertProfile(userId, data) {
 }
 
 export async function pushAll(userId, data) {
-  await Promise.all([
+  const [, ratingsChanged] = await Promise.all([
     upsertFavorites(userId, data.favorites),
+    upsertRatings(userId, Object.entries(data.ratings ?? {})),
     upsertPints(userId, data.pints),
     upsertProfile(userId, data),
   ])
+  if (ratingsChanged) refreshRatingStats()
 }
 
 export async function pushDiff(userId, diff, data) {
-  await Promise.all([
+  const [, , ratingsUpserted, ratingsRemoved] = await Promise.all([
     upsertFavorites(userId, diff.favoritesAdded),
     deleteFavorites(userId, diff.favoritesRemoved),
+    upsertRatings(userId, diff.ratingsUpserted),
+    deleteRatings(userId, diff.ratingsRemoved),
     upsertPints(userId, diff.pintsUpserted),
     deletePints(userId, diff.pintsRemoved),
     diff.profileChanged ? upsertProfile(userId, data) : null,
   ])
+  if (ratingsUpserted || ratingsRemoved) refreshRatingStats()
 }
 
 // Session --------------------------------------------------------------------

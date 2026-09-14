@@ -21,13 +21,13 @@ function usdaSources(ingredients) {
   return sources
 }
 
-export default function NutritionPanel({ recipe, scale, tubOz }) {
+export default function NutritionPanel({ recipe, scale, label }) {
   const fields = FIELDS.filter(({ key }) => recipe[key] !== null && recipe[key] !== undefined)
   const sources = recipe.nutrition_source === 'usda' ? usdaSources(recipe.ingredients) : []
 
   return (
     <section className="panel detail-panel" aria-labelledby="nutrition-title">
-      <h2 className="detail-heading" id="nutrition-title">Per {tubOz} oz tub</h2>
+      <h2 className="detail-heading" id="nutrition-title">{label}</h2>
       <dl className="detail-nutrition">
         {fields.map(({ key, label, unit }) => {
           const value = Number(recipe[key]) * scale

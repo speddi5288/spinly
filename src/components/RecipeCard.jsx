@@ -1,7 +1,12 @@
 import { useId, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { getCategory } from '../lib/categories.js'
+import { formatAverage } from '../lib/ratings.js'
+import { isSupabaseConfigured } from '../lib/supabase.js'
+import { useRatingStats } from '../lib/useRatings.js'
 import { useUserData } from '../lib/userData.js'
-import ScoopMark from './ScoopMark.jsx'
+import CategoryMark from './CategoryMark.jsx'
+import StarIcon from './StarIcon.jsx'
 
 function Heart() {
   return (
@@ -14,11 +19,15 @@ function Heart() {
 export default function RecipeCard({ recipe }) {
   const [failedImage, setFailedImage] = useState(null)
   const { favorites } = useUserData()
+  const rating = useRatingStats()[recipe.id]
   const id = useId()
   const titleId = `${id}-title`
   const savedId = `${id}-saved`
   const saved = favorites.includes(recipe.id)
   const showImage = recipe.image_url && failedImage !== recipe.image_url
+  const creami = recipe.category === 'creami'
+  const eyebrow = creami ? recipe.program : getCategory(recipe.category).short
+  const per = creami ? 'tub' : getCategory(recipe.category).serving
 
   return (
     <article className="recipe-card" aria-labelledby={titleId}>
@@ -34,18 +43,27 @@ export default function RecipeCard({ recipe }) {
               onError={() => setFailedImage(recipe.image_url)}
             />
           ) : (
-            <div className="recipe-photo-fallback" aria-hidden="true"><ScoopMark /></div>
+            <div className="recipe-photo-fallback" aria-hidden="true"><CategoryMark category={recipe.category} /></div>
           )}
           {saved && <span className="saved-mark"><Heart /><span className="sr-only" id={savedId}>Saved</span></span>}
-          <span className="tub-badge">{recipe.tub_size_oz} oz tub</span>
+          {creami && <span className="tub-badge">{recipe.tub_size_oz} oz tub</span>}
         </div>
         <div className="recipe-card-body">
           <div className="recipe-card-text">
-            <p className="recipe-program">{recipe.program}</p>
+            <div className="recipe-card-meta">
+              <p className="recipe-program">{eyebrow}</p>
+              {rating && (
+                <span className="card-rating" aria-label={`Rated ${formatAverage(rating.average)} out of 5`}>
+                  <StarIcon size={12} />
+                  {formatAverage(rating.average)}
+                  {isSupabaseConfigured && <span>({rating.count})</span>}
+                </span>
+              )}
+            </div>
             <h3 id={titleId}>{recipe.title}</h3>
             {recipe.description && <p className="recipe-description">{recipe.description}</p>}
           </div>
-          <dl className="recipe-nutrition" aria-label="Nutrition per tub">
+          <dl className="recipe-nutrition" aria-label={`Nutrition per ${per}`}>
             <div><dt>Calories</dt><dd>{recipe.calories}<span> kcal</span></dd></div>
             <div><dt>Protein</dt><dd>{recipe.protein}<span> g</span></dd></div>
             <div><dt>Carbs</dt><dd>{recipe.carbs}<span> g</span></dd></div>

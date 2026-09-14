@@ -57,6 +57,12 @@ function update(change) {
 /** Every change to saved data goes through these. */
 export const userData = {
   toggleFavorite: (recipeId) => update((d) => ({ ...d, favorites: toggleInList(d.favorites, recipeId) })),
+  setRating: (recipeId, rating) => update((d) => {
+    const ratings = { ...d.ratings }
+    if (rating) ratings[recipeId] = rating
+    else delete ratings[recipeId]
+    return { ...d, ratings }
+  }),
   setMachine: (machine) => update((d) => ({ ...d, machine })),
   setUnits: (units) => update((d) => ({ ...d, units })),
   setNotify: (notify) => update((d) => ({ ...d, notify })),

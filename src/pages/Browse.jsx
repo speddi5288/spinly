@@ -1,7 +1,9 @@
 import { useState } from 'react'
+import CategoryMark from '../components/CategoryMark.jsx'
 import RecipeCard from '../components/RecipeCard.jsx'
-import ScoopMark from '../components/ScoopMark.jsx'
+import { getCategory } from '../lib/categories.js'
 import { readNutritionLimit, selectRecipes } from '../lib/recipes.js'
+import { useRatingStats } from '../lib/useRatings.js'
 import { useRecipes } from '../lib/useRecipes.js'
 
 const emptyFilters = { maxCalories: '', minProtein: '', maxCarbs: '', under300: false }
@@ -11,11 +13,15 @@ const nutritionFields = [
   { key: 'maxCarbs', label: 'Max carbs', unit: 'g' },
 ]
 
-export default function Browse() {
+/** Filters, sort, and grid for one recipe category. */
+export default function Browse({ category }) {
+  const meta = getCategory(category)
   const [filters, setFilters] = useState(emptyFilters)
   const [sort, setSort] = useState('newest')
-  const { recipes: allRecipes, loading, error, reload } = useRecipes()
-  const recipes = selectRecipes(allRecipes, filters, sort)
+  const { recipes: everyRecipe, loading, error, reload } = useRecipes()
+  const ratings = useRatingStats()
+  const allRecipes = everyRecipe.filter((recipe) => recipe.category === category)
+  const recipes = selectRecipes(allRecipes, filters, sort, ratings)
   const hasFilters = filters.under300 || nutritionFields.some(({ key }) => filters[key] !== '')
   const waiting = allRecipes.length === 0 && (loading || error)
 
@@ -24,11 +30,7 @@ export default function Browse() {
   }
 
   return (
-    <section className="recipe-section container" id="recipes" aria-labelledby="recipes-title">
-      <div className="section-heading">
-        <div><p className="eyebrow">THE RECIPE COLLECTION</p><h2 id="recipes-title">Find your next favorite.</h2></div>
-      </div>
-
+    <section className="collection-browse" aria-label={`${meta.label} recipes`}>
       <div className="browse-controls">
         <div className="browse-toolbar">
           <div className="quick-filters">
@@ -46,6 +48,7 @@ export default function Browse() {
             <span>Sort by</span>
             <select id="recipe-sort" value={sort} onChange={(event) => setSort(event.target.value)}>
               <option value="newest">Newest first</option>
+              <option value="rating_desc">Top rated</option>
               <option value="protein_desc">Protein: high to low</option>
               <option value="calories_asc">Calories: low to high</option>
             </select>
@@ -53,7 +56,7 @@ export default function Browse() {
         </div>
 
         <fieldset className="nutrition-filters">
-          <legend className="sr-only">Filter by nutrition per tub</legend>
+          <legend className="sr-only">Filter by nutrition per {meta.serving}</legend>
           {nutritionFields.map(({ key, label, unit }) => {
             const invalid = filters[key] !== '' && readNutritionLimit(filters[key]) === null
             return (
@@ -93,7 +96,7 @@ export default function Browse() {
         <>
           <div className="results-heading">
             <p role="status" aria-live="polite">Showing <strong>{recipes.length}</strong> of {allRecipes.length} recipes</p>
-            <span>Nutrition per tub</span>
+            <span>Nutrition per {meta.serving}</span>
           </div>
 
           {recipes.length > 0 ? (
@@ -102,7 +105,7 @@ export default function Browse() {
             </div>
           ) : (
             <div className="empty-collection">
-              <div className="empty-icon"><ScoopMark /></div>
+              <div className="empty-icon"><CategoryMark category={category} /></div>
               <h3>{hasFilters ? 'No matches.' : 'No recipes yet.'}</h3>
               {hasFilters && <button type="button" className="button button-primary empty-reset" onClick={() => setFilters(emptyFilters)}>Clear filters</button>}
             </div>

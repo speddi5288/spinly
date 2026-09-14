@@ -15,7 +15,7 @@ export default function PintLogForm({ recipes, loading, onLogged }) {
   const [recipeId, setRecipeId] = useState('')
   const [frozenAt, setFrozenAt] = useState('')
   const [error, setError] = useState(null)
-  const options = [...recipes].sort((a, b) => a.title.localeCompare(b.title))
+  const options = recipes.filter((recipe) => recipe.category === 'creami').sort((a, b) => a.title.localeCompare(b.title))
 
   function submit(event) {
     event.preventDefault()

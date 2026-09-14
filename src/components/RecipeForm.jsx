@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { CATEGORIES, getCategory, isCategoryId } from '../lib/categories.js'
 import { PROGRAM_IDS, PROGRAM_NAMES } from '../lib/machines.js'
 import { UNITS } from '../lib/units.js'
 
@@ -29,21 +30,23 @@ function newLine(line = {}) {
 const text = (value) => (value == null ? '' : String(value))
 
 /** A normalized recipe (or null) → form values. */
-function initialValues(recipe) {
+function initialValues(recipe, defaultCategory) {
   if (!recipe) {
     return {
+      category: isCategoryId(defaultCategory) ? defaultCategory : 'creami',
       title: '', description: '', image_url: '', tub_size_oz: '16', program: '', freeze_time_hours: '24',
       freeze_note: '', respin_note: '', calories: '', protein: '', carbs: '', fat: '',
       ingredients: [newLine(), newLine(), newLine()], steps: '',
     }
   }
   return {
+    category: isCategoryId(recipe.category) ? recipe.category : 'creami',
     title: text(recipe.title),
     description: text(recipe.description),
     image_url: text(recipe.image_url),
     tub_size_oz: recipe.tub_size_oz === 24 ? '24' : '16',
     program: PROGRAM_IDS.includes(recipe.programs?.[0]) ? recipe.programs[0] : '',
-    freeze_time_hours: text(recipe.freeze_time_hours ?? 24),
+    freeze_time_hours: text(recipe.freeze_time_hours || 24),
     freeze_note: text(recipe.freeze_note),
     respin_note: text(recipe.respin_note),
     calories: text(recipe.calories),
@@ -79,9 +82,11 @@ function validate(values) {
   if (!values.title.trim()) errors['recipe-title'] = 'Add a title.'
   const imageUrl = values.image_url.trim()
   if (imageUrl && !isHttpUrl(imageUrl)) errors['recipe-image_url'] = 'Use an http:// or https:// link.'
-  if (!PROGRAM_IDS.includes(values.program)) errors['recipe-program'] = 'Choose a program.'
-  const hours = readNumber(values.freeze_time_hours)
-  if (hours === null || !(hours >= 1 && hours <= 168)) errors['recipe-freeze_time_hours'] = 'Use 1 to 168 hours.'
+  if (values.category === 'creami') {
+    if (!PROGRAM_IDS.includes(values.program)) errors['recipe-program'] = 'Choose a program.'
+    const hours = readNumber(values.freeze_time_hours)
+    if (hours === null || !(hours >= 1 && hours <= 168)) errors['recipe-freeze_time_hours'] = 'Use 1 to 168 hours.'
+  }
 
   for (const { key, max } of NUTRITION) {
     const number = readNumber(values[key])
@@ -133,14 +138,15 @@ function Optional() {
 /**
  * Add/edit form. `onSave(values)` resolves to { error } (a short message, or null on success).
  */
-export default function RecipeForm({ recipe = null, onSave, cancelTo = '/', submitLabel = 'Save recipe' }) {
-  const [values, setValues] = useState(() => initialValues(recipe))
+export default function RecipeForm({ recipe = null, defaultCategory = 'creami', onSave, cancelTo = '/', submitLabel = 'Save recipe' }) {
+  const [values, setValues] = useState(() => initialValues(recipe, defaultCategory))
   const [submitted, setSubmitted] = useState(false)
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState('')
   const savingRef = useRef(false)
   const errors = submitted ? validate(values) : {}
   const lines = values.ingredients
+  const creami = values.category === 'creami'
 
   const set = (key) => (event) => {
     const { value } = event.target
@@ -216,6 +222,25 @@ export default function RecipeForm({ recipe = null, onSave, cancelTo = '/', subm
       <section className="panel form-section" aria-labelledby="recipe-basics-title">
         <h2 className="form-section-title" id="recipe-basics-title">Basics</h2>
         <div className="form-stack">
+          <fieldset className="form-choice">
+            <legend>Type</legend>
+            <div className="form-choice-options">
+              {CATEGORIES.map((category) => (
+                <span key={category.id}>
+                  <input
+                    className="sr-only"
+                    type="radio"
+                    id={`recipe-category-${category.id}`}
+                    name="category"
+                    value={category.id}
+                    checked={values.category === category.id}
+                    onChange={set('category')}
+                  />
+                  <label className="filter-chip" htmlFor={`recipe-category-${category.id}`}>{category.label}</label>
+                </span>
+              ))}
+            </div>
+          </fieldset>
           <div className="form-field">
             <label htmlFor="recipe-title">Title</label>
             <input className="form-input" type="text" maxLength={120} autoComplete="off" required value={values.title} onChange={set('title')} {...field('title')} />
@@ -233,59 +258,61 @@ export default function RecipeForm({ recipe = null, onSave, cancelTo = '/', subm
         </div>
       </section>
 
-      <section className="panel form-section" aria-labelledby="recipe-machine-title">
-        <h2 className="form-section-title" id="recipe-machine-title">Machine</h2>
-        <div className="form-grid form-grid-3">
-          <fieldset className="form-choice">
-            <legend>Tub size</legend>
-            <div className="form-choice-options">
-              {['16', '24'].map((size) => (
-                <span key={size}>
-                  <input
-                    className="sr-only"
-                    type="radio"
-                    id={`recipe-tub-${size}`}
-                    name="tub_size_oz"
-                    value={size}
-                    checked={values.tub_size_oz === size}
-                    onChange={set('tub_size_oz')}
-                  />
-                  <label className="filter-chip" htmlFor={`recipe-tub-${size}`}>{size} oz</label>
-                </span>
-              ))}
+      {creami && (
+        <section className="panel form-section" aria-labelledby="recipe-machine-title">
+          <h2 className="form-section-title" id="recipe-machine-title">Machine</h2>
+          <div className="form-grid form-grid-3">
+            <fieldset className="form-choice">
+              <legend>Tub size</legend>
+              <div className="form-choice-options">
+                {['16', '24'].map((size) => (
+                  <span key={size}>
+                    <input
+                      className="sr-only"
+                      type="radio"
+                      id={`recipe-tub-${size}`}
+                      name="tub_size_oz"
+                      value={size}
+                      checked={values.tub_size_oz === size}
+                      onChange={set('tub_size_oz')}
+                    />
+                    <label className="filter-chip" htmlFor={`recipe-tub-${size}`}>{size} oz</label>
+                  </span>
+                ))}
+              </div>
+            </fieldset>
+            <div className="form-field">
+              <label htmlFor="recipe-program">Program</label>
+              <select className="form-input" required value={values.program} onChange={set('program')} {...field('program')}>
+                <option value="">Choose…</option>
+                {PROGRAM_IDS.map((id) => <option key={id} value={id}>{PROGRAM_NAMES[id]}</option>)}
+              </select>
+              <FieldError id="recipe-program" error={errors['recipe-program']} />
             </div>
-          </fieldset>
-          <div className="form-field">
-            <label htmlFor="recipe-program">Program</label>
-            <select className="form-input" required value={values.program} onChange={set('program')} {...field('program')}>
-              <option value="">Choose…</option>
-              {PROGRAM_IDS.map((id) => <option key={id} value={id}>{PROGRAM_NAMES[id]}</option>)}
-            </select>
-            <FieldError id="recipe-program" error={errors['recipe-program']} />
-          </div>
-          <div className="form-field">
-            <label htmlFor="recipe-freeze_time_hours">Freeze time</label>
-            <div className="number-field">
-              <input type="number" inputMode="decimal" min="1" max="168" step="any" required value={values.freeze_time_hours} onChange={set('freeze_time_hours')} {...field('freeze_time_hours')} />
-              <span aria-hidden="true">hours</span>
+            <div className="form-field">
+              <label htmlFor="recipe-freeze_time_hours">Freeze time</label>
+              <div className="number-field">
+                <input type="number" inputMode="decimal" min="1" max="168" step="any" required value={values.freeze_time_hours} onChange={set('freeze_time_hours')} {...field('freeze_time_hours')} />
+                <span aria-hidden="true">hours</span>
+              </div>
+              <FieldError id="recipe-freeze_time_hours" error={errors['recipe-freeze_time_hours']} />
             </div>
-            <FieldError id="recipe-freeze_time_hours" error={errors['recipe-freeze_time_hours']} />
           </div>
-        </div>
-        <div className="form-grid">
-          <div className="form-field">
-            <label htmlFor="recipe-freeze_note">Freeze note <Optional /></label>
-            <input className="form-input" type="text" maxLength={300} autoComplete="off" value={values.freeze_note} onChange={set('freeze_note')} {...field('freeze_note')} />
+          <div className="form-grid">
+            <div className="form-field">
+              <label htmlFor="recipe-freeze_note">Freeze note <Optional /></label>
+              <input className="form-input" type="text" maxLength={300} autoComplete="off" value={values.freeze_note} onChange={set('freeze_note')} {...field('freeze_note')} />
+            </div>
+            <div className="form-field">
+              <label htmlFor="recipe-respin_note">Re-spin note <Optional /></label>
+              <input className="form-input" type="text" maxLength={300} autoComplete="off" value={values.respin_note} onChange={set('respin_note')} {...field('respin_note')} />
+            </div>
           </div>
-          <div className="form-field">
-            <label htmlFor="recipe-respin_note">Re-spin note <Optional /></label>
-            <input className="form-input" type="text" maxLength={300} autoComplete="off" value={values.respin_note} onChange={set('respin_note')} {...field('respin_note')} />
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <section className="panel form-section" aria-labelledby="recipe-nutrition-title">
-        <h2 className="form-section-title" id="recipe-nutrition-title">Nutrition per tub</h2>
+        <h2 className="form-section-title" id="recipe-nutrition-title">Nutrition per {getCategory(values.category).serving}</h2>
         <div className="form-grid form-grid-4">
           {NUTRITION.map(({ key, label, unit, max }) => (
             <div className="form-field" key={key}>

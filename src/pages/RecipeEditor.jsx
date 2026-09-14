@@ -1,6 +1,7 @@
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import RecipeForm from '../components/RecipeForm.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
+import { getCategory, isCategoryId } from '../lib/categories.js'
 import { toRow } from '../lib/recipes.js'
 import { supabase } from '../lib/supabase.js'
 import { useRecipe, useRecipes } from '../lib/useRecipes.js'
@@ -11,11 +12,13 @@ const PERMISSION_CODES = new Set(['PGRST116', '42501'])
 
 export default function RecipeEditor() {
   const { id } = useParams()
+  const [params] = useSearchParams()
   const editing = id !== undefined
   const navigate = useNavigate()
   const { configured, user, loading: authLoading } = useAuth()
   const { recipe, loading, error } = useRecipe(editing ? id : undefined)
   const { reload } = useRecipes()
+  const defaultCategory = isCategoryId(params.get('category')) ? params.get('category') : 'creami'
 
   async function save(values) {
     const row = toRow(values)
@@ -48,10 +51,11 @@ export default function RecipeEditor() {
   } else {
     content = (
       <RecipeForm
-        key={editing ? recipe.id : 'new'}
+        key={editing ? recipe.id : `new-${defaultCategory}`}
         recipe={editing ? recipe : null}
+        defaultCategory={defaultCategory}
         onSave={save}
-        cancelTo={editing ? `/recipes/${id}` : '/'}
+        cancelTo={editing ? `/recipes/${id}` : getCategory(defaultCategory).path}
       />
     )
   }

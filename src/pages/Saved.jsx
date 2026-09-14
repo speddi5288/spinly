@@ -29,7 +29,7 @@ function SavedContent() {
       <div className="empty-collection saved-empty">
         <div className="empty-icon"><ScoopMark /></div>
         <h3>Nothing saved yet.</h3>
-        <Link className="text-link" to="/#recipes">Browse recipes</Link>
+        <Link className="text-link" to="/#collections">Browse recipes</Link>
       </div>
     )
   }

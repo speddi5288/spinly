@@ -6,7 +6,8 @@ Status (September 13, 2026): Steps 1–3 and the app code for Steps 4–5 are bu
 - Recipes come from two places: starter recipes that ship in `src/data/starterRecipes.js` (nutrition calculated from USDA data), plus community recipes that signed-in users submit to Supabase.
 - Added from the prototype: recipe pages that pick the right program for your CREAMi model and scale to its pint size, US/metric units, a pantry matcher, a pint log with freeze countdown and calendar reminders, and saved recipes that sync when signed in.
 - The schema adds `profiles`, `favorites`, and `pint_log` next to `recipes` for synced user data.
-- CREAMi only. Nutrition stays per tub. The UI stays minimal, with no extra explanatory text.
+- Later the same day: yogurt bowls and smoothies came back as separate collections (`/creami`, `/bowls`, `/smoothies`), the home page now links to them, and recipes gained star ratings (`recipe_ratings` table plus a public `recipe_rating_stats()` function).
+- Nutrition is per tub for CREAMi and per serving for bowls and smoothies. The UI stays minimal, with no extra explanatory text.
 
 Build a Ninja CREAMi recipe app with React, plain JavaScript, and Supabase. Keep the original core features: browsing, filtering, sorting, recipe details, accounts, recipe submissions, and editing your own recipes.
 

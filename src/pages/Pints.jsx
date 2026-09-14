@@ -61,7 +61,7 @@ export default function Pints() {
         <div className="empty-collection pints-empty">
           <div className="empty-icon"><ScoopMark /></div>
           <h3>No pints yet.</h3>
-          <Link className="text-link" to="/#recipes">Browse recipes</Link>
+          <Link className="text-link" to="/#collections">Browse recipes</Link>
         </div>
       )}
 

@@ -1,10 +1,11 @@
 # Spinly
 
-Ninja CREAMi recipes, built with React, JavaScript, Vite, React Router, regular CSS, and optional Supabase.
+Ninja CREAMi pints, yogurt bowls, and smoothies, built with React, JavaScript, Vite, React Router, regular CSS, and optional Supabase.
 
 ## Features
 
-- Browse, filter (calories, protein, carbs), and sort recipes. Nutrition is per tub.
+- Separate collections for Ninja CREAMi, yogurt bowls, and smoothies, each with filters (calories, protein, carbs) and sorting. Nutrition is per tub for CREAMi and per serving otherwise.
+- Star ratings: yours are saved on the device, and averages are shared when Supabase is set up.
 - Recipe pages that name the right program for your machine (7-in-1, Deluxe, Scoop & Swirl), scale to your pint size, and switch between US and metric.
 - Starter recipes ship with the app, with nutrition calculated from USDA FoodData Central.
 - Pantry: pick what you have and see what you can make.
@@ -42,11 +43,11 @@ npm run preview
 
 ## Adding a starter recipe
 
-Add it to `src/data/starterRecipes.js`. Ingredients must use ids from `src/lib/ingredients.js`, which stores USDA values per 100 g and gram weights per unit. Write `{program}` in the step where you press the button, and list programs in order of preference. `npm test` checks the data.
+Add it to `src/data/starterRecipes.js` (CREAMi), `starterBowls.js`, or `starterSmoothies.js`. Ingredients must use ids from `src/lib/ingredients.js`, which stores USDA values per 100 g and gram weights per unit. Write `{program}` in the step where you press the button, and list programs in order of preference. `npm test` checks the data.
 
 ## Layout
 
-- `src/pages/`: Home + Browse, RecipeDetail, Pantry, Pints, Saved, Auth, RecipeEditor
+- `src/pages/`: Home, Collection + Browse, RecipeDetail, Pantry, Pints, Saved, Auth, RecipeEditor
 - `src/components/`: Layout, RecipeCard, RecipeForm, and page pieces
 - `src/lib/`: recipe normalization, machines, units, nutrition, pantry, pints, local storage, Supabase
 - `src/data/starterRecipes.js`: starter recipes

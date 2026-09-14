@@ -72,28 +72,34 @@ create table public.recipes (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null default auth.uid() references auth.users (id) on delete cascade,
   created_at timestamptz not null default now(),
+  category text not null default 'creami' check (category in ('creami', 'bowl', 'smoothie')),
   title text not null check (char_length(btrim(title)) between 1 and 120),
   description text not null default '' check (char_length(description) <= 500),
   image_url text check (image_url is null or (char_length(image_url) <= 2000 and image_url ~* '^https?://\S+$')),
-  tub_size_oz smallint not null default 16 check (tub_size_oz in (16, 24)),
-  program text not null check (program in (
+  -- CREAMi only; null for bowls and smoothies (see recipes_creami_fields).
+  tub_size_oz smallint check (tub_size_oz is null or tub_size_oz in (16, 24)),
+  program text check (program is null or program in (
     'ice_cream', 'lite_ice_cream', 'sorbet', 'gelato', 'milkshake', 'smoothie_bowl',
     'frozen_yogurt', 'italian_ice', 'creamiccino', 'frozen_drink', 'slushi', 'soft_serve',
     'soft_serve_lite', 'fruit_whip', 'frozen_custard', 'soft_frozen_yogurt', 'creamifit', 'mix_in'
   )),
-  freeze_time_hours numeric not null default 24 check (freeze_time_hours between 1 and 168),
+  freeze_time_hours numeric check (freeze_time_hours is null or freeze_time_hours between 1 and 168),
   freeze_note text not null default '' check (char_length(freeze_note) <= 300),
   respin_note text not null default '' check (char_length(respin_note) <= 300),
-  -- Nutrition for the whole tub; macros in grams.
+  -- Nutrition for the whole tub (CREAMi) or one serving (bowls, smoothies); macros in grams.
   calories numeric not null check (calories between 0 and 10000),
   protein numeric not null check (protein between 0 and 1000),
   carbs numeric not null check (carbs between 0 and 1000),
   fat numeric not null check (fat between 0 and 1000),
   ingredients jsonb not null check (public.is_valid_ingredient_list(ingredients)),
-  steps text[] not null check (public.is_valid_step_list(steps))
+  steps text[] not null check (public.is_valid_step_list(steps)),
+  constraint recipes_creami_fields check (
+    (category = 'creami') = (tub_size_oz is not null and program is not null and freeze_time_hours is not null)
+  )
 );
 
 create index recipes_created_at_idx on public.recipes (created_at desc);
+create index recipes_category_created_at_idx on public.recipes (category, created_at desc);
 create index recipes_user_id_idx on public.recipes (user_id);
 
 alter table public.recipes enable row level security;
@@ -103,11 +109,11 @@ revoke all on table public.recipes from anon, authenticated;
 grant select on table public.recipes to anon, authenticated;
 -- id, user_id and created_at come from defaults and can never be written by clients.
 grant insert (
-  title, description, image_url, tub_size_oz, program, freeze_time_hours, freeze_note,
+  category, title, description, image_url, tub_size_oz, program, freeze_time_hours, freeze_note,
   respin_note, calories, protein, carbs, fat, ingredients, steps
 ) on table public.recipes to authenticated;
 grant update (
-  title, description, image_url, tub_size_oz, program, freeze_time_hours, freeze_note,
+  category, title, description, image_url, tub_size_oz, program, freeze_time_hours, freeze_note,
   respin_note, calories, protein, carbs, fat, ingredients, steps
 ) on table public.recipes to authenticated;
 grant delete on table public.recipes to authenticated;
@@ -154,6 +160,20 @@ create table public.favorites (
   primary key (user_id, recipe_id)
 );
 
+create table public.recipe_ratings (
+  user_id uuid not null default auth.uid() references auth.users (id) on delete cascade,
+  recipe_id text not null check (char_length(recipe_id) between 1 and 100),
+  rating smallint not null check (rating between 1 and 5),
+  updated_at timestamptz not null default now(),
+  primary key (user_id, recipe_id)
+);
+
+create index recipe_ratings_recipe_id_idx on public.recipe_ratings (recipe_id);
+
+create trigger recipe_ratings_set_updated_at
+  before update on public.recipe_ratings
+  for each row execute function public.set_updated_at();
+
 create table public.pint_log (
   id uuid primary key,
   user_id uuid not null default auth.uid() references auth.users (id) on delete cascade,
@@ -175,10 +195,11 @@ create trigger pint_log_set_updated_at
 
 alter table public.profiles enable row level security;
 alter table public.favorites enable row level security;
+alter table public.recipe_ratings enable row level security;
 alter table public.pint_log enable row level security;
 
-revoke all on table public.profiles, public.favorites, public.pint_log from anon, authenticated;
-grant select, insert, update, delete on table public.profiles, public.favorites, public.pint_log to authenticated;
+revoke all on table public.profiles, public.favorites, public.recipe_ratings, public.pint_log from anon, authenticated;
+grant select, insert, update, delete on table public.profiles, public.favorites, public.recipe_ratings, public.pint_log to authenticated;
 
 create policy "Owners read their profile" on public.profiles for select to authenticated
   using ((select auth.uid()) = id);
@@ -198,6 +219,15 @@ create policy "Owners update favorites" on public.favorites for update to authen
 create policy "Owners remove favorites" on public.favorites for delete to authenticated
   using ((select auth.uid()) = user_id);
 
+create policy "Owners read their ratings" on public.recipe_ratings for select to authenticated
+  using ((select auth.uid()) = user_id);
+create policy "Owners add ratings" on public.recipe_ratings for insert to authenticated
+  with check ((select auth.uid()) = user_id);
+create policy "Owners change ratings" on public.recipe_ratings for update to authenticated
+  using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);
+create policy "Owners remove ratings" on public.recipe_ratings for delete to authenticated
+  using ((select auth.uid()) = user_id);
+
 create policy "Owners read their pints" on public.pint_log for select to authenticated
   using ((select auth.uid()) = user_id);
 create policy "Owners log pints" on public.pint_log for insert to authenticated
@@ -206,5 +236,21 @@ create policy "Owners update their pints" on public.pint_log for update to authe
   using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);
 create policy "Owners remove their pints" on public.pint_log for delete to authenticated
   using ((select auth.uid()) = user_id);
+
+-- Public rating averages, without exposing who rated what.
+create function public.recipe_rating_stats()
+returns table (recipe_id text, average numeric, count bigint)
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select r.recipe_id, round(avg(r.rating), 2), count(*)
+  from public.recipe_ratings as r
+  group by r.recipe_id
+$$;
+
+revoke all on function public.recipe_rating_stats() from public;
+grant execute on function public.recipe_rating_stats() to anon, authenticated;
 
 commit;

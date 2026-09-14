@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import ScoopMark from '../ScoopMark.jsx'
+import { getCategory } from '../../lib/categories.js'
+import CategoryMark from '../CategoryMark.jsx'
 
 export default function RecipeHeader({ recipe, children }) {
   const [failedImage, setFailedImage] = useState(null)
@@ -19,14 +20,14 @@ export default function RecipeHeader({ recipe, children }) {
           />
         ) : (
           <div className="recipe-photo-fallback" role="img" aria-label={`${recipe.title}: photo unavailable`}>
-            <ScoopMark />
+            <CategoryMark category={recipe.category} />
           </div>
         )}
       </div>
       <div className="detail-intro">
         <p className="eyebrow detail-eyebrow">
           <span className="short-line" aria-hidden="true" />
-          {recipe.program}
+          {recipe.program ?? getCategory(recipe.category).short}
           {recipe.source === 'starter' && !recipe.tested && <span className="detail-tag">Untested</span>}
         </p>
         <h1 className="page-title detail-title" id="detail-title">{recipe.title}</h1>

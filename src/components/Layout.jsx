@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
+import { CATEGORIES } from '../lib/categories.js'
 import { pintStatus } from '../lib/pints.js'
 import { useNow, useUserData } from '../lib/userData.js'
 import AppEffects from './AppEffects.jsx'
@@ -39,7 +40,10 @@ export default function Layout() {
             <ScoopMark /><span>spinly<span className="brand-dot">.</span></span>
           </Link>
           <nav className="main-nav" aria-label="Main navigation">
-            <Link to="/#recipes">Recipes</Link>
+            {CATEGORIES.map((category) => (
+              <NavLink key={category.id} to={category.path}>{category.label}</NavLink>
+            ))}
+            <span className="nav-divider" aria-hidden="true" />
             <NavLink to="/pantry">Pantry</NavLink>
             <NavLink to="/pints">Pints <ReadyCount /></NavLink>
             <NavLink to="/saved">Saved</NavLink>

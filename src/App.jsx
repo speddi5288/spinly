@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout.jsx'
 import Auth from './pages/Auth.jsx'
+import Collection from './pages/Collection.jsx'
 import Home from './pages/Home.jsx'
 import NotFound from './pages/NotFound.jsx'
 import Pantry from './pages/Pantry.jsx'
@@ -14,6 +15,9 @@ export default function App() {
     <Routes>
       <Route element={<Layout />}>
         <Route index element={<Home />} />
+        <Route path="creami" element={<Collection category="creami" />} />
+        <Route path="bowls" element={<Collection category="bowl" />} />
+        <Route path="smoothies" element={<Collection category="smoothie" />} />
         <Route path="recipes/new" element={<RecipeEditor />} />
         <Route path="recipes/:id" element={<RecipeDetail />} />
         <Route path="recipes/:id/edit" element={<RecipeEditor />} />

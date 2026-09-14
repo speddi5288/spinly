@@ -2,15 +2,24 @@ import assert from 'node:assert/strict'
 import { existsSync } from 'node:fs'
 import test from 'node:test'
 import { fileURLToPath } from 'node:url'
+import { CATEGORY_IDS } from '../lib/categories.js'
 import { INGREDIENTS } from '../lib/ingredients.js'
 import { isProgramId } from '../lib/machines.js'
 import { UNITS } from '../lib/units.js'
 import { starterRecipes } from './starterRecipes.js'
 
 const SLUG = /^[a-z0-9]+(-[a-z0-9]+)*$/
+const creami = starterRecipes.filter((recipe) => recipe.category === 'creami')
+const others = starterRecipes.filter((recipe) => recipe.category !== 'creami')
 
-test('there are starter recipes to show', () => {
-  assert.ok(starterRecipes.length > 0)
+test('each collection has starter recipes', () => {
+  for (const category of CATEGORY_IDS) {
+    assert.ok(starterRecipes.filter((recipe) => recipe.category === category).length >= 10, category)
+  }
+})
+
+test('every starter has a known category', () => {
+  for (const recipe of starterRecipes) assert.ok(CATEGORY_IDS.includes(recipe.category), `${recipe.id}: ${recipe.category}`)
 })
 
 test('every starter has a unique slug id', () => {
@@ -52,24 +61,32 @@ test('whole-unit lines use ingredients with singular and plural labels', () => {
   }
 })
 
-test('programs are non-empty lists of valid program ids', () => {
-  for (const recipe of starterRecipes) {
+test('CREAMi programs are non-empty lists of valid program ids', () => {
+  for (const recipe of creami) {
     assert.ok(recipe.programs.length > 0, recipe.id)
     for (const program of recipe.programs) assert.ok(isProgramId(program), `${recipe.id}: ${program}`)
     assert.equal(new Set(recipe.programs).size, recipe.programs.length, `${recipe.id}: duplicate program`)
   }
 })
 
-test('every recipe has a step that names the {program} to run', () => {
-  for (const recipe of starterRecipes) {
+test('every CREAMi recipe has a step that names the {program} to run', () => {
+  for (const recipe of creami) {
     assert.ok(recipe.steps.some((step) => step.includes('{program}')), recipe.id)
   }
 })
 
-test('mix_in is true exactly when a line is in the mix-in section', () => {
-  for (const recipe of starterRecipes) {
+test('CREAMi mix_in is true exactly when a line is in the mix-in section', () => {
+  for (const recipe of creami) {
     const hasMixIn = recipe.ingredients.some((line) => line.section === 'mix-in')
     assert.equal(recipe.mix_in, hasMixIn, recipe.id)
+  }
+})
+
+test('bowls and smoothies have no machine programs or mix-ins', () => {
+  for (const recipe of others) {
+    assert.equal(recipe.programs, undefined, recipe.id)
+    assert.ok(!recipe.steps.some((step) => step.includes('{program}')), recipe.id)
+    assert.ok(!recipe.ingredients.some((line) => line.section === 'mix-in'), recipe.id)
   }
 })
 

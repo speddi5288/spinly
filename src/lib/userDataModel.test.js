@@ -16,8 +16,14 @@ test('sanitize returns defaults for non-objects', () => {
 })
 
 test('sanitize keeps valid values and dedupes lists', () => {
-  const input = { favorites: ['a', 'b', 'a', 3, null], pantry: ['milk-2', 'milk-2', {}], machine: 'nc501', units: 'metric', notify: true, pints: [pint('p1')] }
-  assert.deepEqual(sanitizeUserData(input), { favorites: ['a', 'b'], pantry: ['milk-2'], machine: 'nc501', units: 'metric', notify: true, pints: [pint('p1')] })
+  const input = { favorites: ['a', 'b', 'a', 3, null], ratings: { a: 4 }, pantry: ['milk-2', 'milk-2', {}], machine: 'nc501', units: 'metric', notify: true, pints: [pint('p1')] }
+  assert.deepEqual(sanitizeUserData(input), { favorites: ['a', 'b'], ratings: { a: 4 }, pantry: ['milk-2'], machine: 'nc501', units: 'metric', notify: true, pints: [pint('p1')] })
+})
+
+test('sanitize keeps only whole-star ratings from 1 to 5', () => {
+  const ratings = { ok: 5, low: 1, zero: 0, six: 6, half: 3.5, text: '4', nothing: null }
+  assert.deepEqual(sanitizeUserData({ ratings }).ratings, { ok: 5, low: 1 })
+  assert.deepEqual(sanitizeUserData({ ratings: [4] }).ratings, {})
 })
 
 test('sanitize drops malformed pints and fills a missing recipeTitle', () => {
@@ -61,6 +67,12 @@ test('merge unions favorites and pints, and this device wins for the same pint',
   assert.equal(merged.pints.find((p) => p.id === 'shared').notes, 'local')
 })
 
+test('merge unions ratings and this device wins for the same recipe', () => {
+  const merged = mergeUserData(data({ ratings: { shared: 5, mine: 2 } }), data({ ratings: { shared: 1, theirs: 4, junk: 9 } }))
+  assert.deepEqual(merged.ratings, { shared: 5, mine: 2, theirs: 4 })
+  assert.deepEqual(mergeUserData(data({ ratings: { a: 3 } }), { favorites: [], pints: [] }).ratings, { a: 3 })
+})
+
 test('merge prefers local machine and non-default units, otherwise the account', () => {
   assert.equal(mergeUserData(data({ machine: 'nc301' }), data({ machine: 'nc501' })).machine, 'nc301')
   assert.equal(mergeUserData(data(), data({ machine: 'nc501' })).machine, 'nc501')
@@ -90,9 +102,16 @@ test('diff reports added and removed favorites and pints, and profile changes', 
   assert.equal(isEmptyDiff(diff), false)
 })
 
+test('diff reports new, changed, and removed ratings', () => {
+  const diff = diffUserData(data({ ratings: { same: 4, changed: 2, gone: 5 } }), data({ ratings: { same: 4, changed: 3, added: 1 } }))
+  assert.deepEqual(diff.ratingsUpserted, [['changed', 3], ['added', 1]])
+  assert.deepEqual(diff.ratingsRemoved, ['gone'])
+  assert.equal(isEmptyDiff(diff), false)
+})
+
 test('unchanged synced data is an empty diff, even when device-only fields change', () => {
-  const before = data({ favorites: ['a'], pints: [pint('p')] })
-  const after = { ...before, pints: [pint('p')], pantry: ['milk-2'], notify: true }
+  const before = data({ favorites: ['a'], ratings: { a: 4 }, pints: [pint('p')] })
+  const after = { ...before, ratings: { a: 4 }, pints: [pint('p')], pantry: ['milk-2'], notify: true }
   assert.equal(isEmptyDiff(diffUserData(before, after)), true)
 })
 

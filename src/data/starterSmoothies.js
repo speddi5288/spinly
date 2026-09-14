@@ -1,0 +1,177 @@
+// Starter smoothies. Nutrition is calculated per smoothie from USDA data in src/lib/recipes.js.
+
+const smoothie = (recipe) => ({ category: 'smoothie', image_url: null, prep_minutes: 3, tested: false, ...recipe })
+
+export const smoothieRecipes = [
+  smoothie({
+    id: 'green-protein-smoothie',
+    title: 'Green Protein Smoothie',
+    description: 'Spinach you can’t taste, with banana and peanut butter.',
+    created_at: '2026-09-01T15:00:00Z',
+    ingredients: [
+      { ingredientId: 'almond-milk', amount: 1, unit: 'cup' },
+      { ingredientId: 'spinach', amount: 1, unit: 'cup' },
+      { ingredientId: 'banana', amount: 1, unit: 'whole', prep: 'frozen' },
+      { ingredientId: 'whey', amount: 1, unit: 'scoop', prep: 'vanilla' },
+      { ingredientId: 'peanut-butter', amount: 1, unit: 'tbsp' },
+    ],
+    steps: [
+      'Blend the almond milk and spinach until smooth.',
+      'Add everything else and blend again.',
+    ],
+  }),
+  smoothie({
+    id: 'strawberry-banana-smoothie',
+    title: 'Strawberry Banana',
+    description: 'The classic, thickened with Greek yogurt.',
+    created_at: '2026-09-02T15:00:00Z',
+    ingredients: [
+      { ingredientId: 'milk-2', amount: 1, unit: 'cup' },
+      { ingredientId: 'strawberries-frozen', amount: 1, unit: 'cup' },
+      { ingredientId: 'banana', amount: 0.5, unit: 'whole' },
+      { ingredientId: 'greek-yogurt-nonfat', amount: 0.5, unit: 'cup' },
+      { ingredientId: 'honey', amount: 1, unit: 'tsp', optional: true },
+    ],
+    steps: [
+      'Blend everything except the honey for 45 seconds.',
+      'Taste, and add honey if the berries are tart.',
+    ],
+  }),
+  smoothie({
+    id: 'golden-mango-smoothie',
+    title: 'Golden Mango',
+    description: 'Mango, orange, turmeric, and fresh ginger.',
+    created_at: '2026-09-03T15:00:00Z',
+    prep_minutes: 4,
+    ingredients: [
+      { ingredientId: 'mango', amount: 1, unit: 'cup' },
+      { ingredientId: 'orange-juice', amount: 0.5, unit: 'cup' },
+      { ingredientId: 'greek-yogurt-nonfat', amount: 0.5, unit: 'cup' },
+      { ingredientId: 'water', amount: 0.25, unit: 'cup' },
+      { ingredientId: 'turmeric', amount: 0.5, unit: 'tsp' },
+      { ingredientId: 'ginger', amount: 0.5, unit: 'tsp' },
+    ],
+    steps: [
+      'Blend everything until smooth.',
+      'Add water a splash at a time if it’s too thick.',
+    ],
+  }),
+  smoothie({
+    id: 'chocolate-peanut-butter-shake',
+    title: 'Chocolate PB Shake',
+    description: 'Milkshake taste with about 40 g of protein.',
+    created_at: '2026-09-04T15:00:00Z',
+    ingredients: [
+      { ingredientId: 'milk-2', amount: 1, unit: 'cup' },
+      { ingredientId: 'whey', amount: 1, unit: 'scoop', prep: 'chocolate' },
+      { ingredientId: 'cocoa', amount: 1, unit: 'tbsp' },
+      { ingredientId: 'banana', amount: 0.5, unit: 'whole', prep: 'frozen' },
+      { ingredientId: 'peanut-butter', amount: 1, unit: 'tbsp' },
+    ],
+    steps: [
+      'Blend the milk, protein, and cocoa first.',
+      'Add the banana and peanut butter and blend until thick.',
+    ],
+  }),
+  smoothie({
+    id: 'berry-oat-smoothie',
+    title: 'Berry Oat',
+    description: 'Blended oats make it breakfast.',
+    created_at: '2026-09-05T15:00:00Z',
+    prep_minutes: 4,
+    ingredients: [
+      { ingredientId: 'milk-2', amount: 1, unit: 'cup' },
+      { ingredientId: 'oats', amount: 0.25, unit: 'cup' },
+      { ingredientId: 'blueberries-frozen', amount: 0.5, unit: 'cup' },
+      { ingredientId: 'raspberries-frozen', amount: 0.5, unit: 'cup' },
+      { ingredientId: 'greek-yogurt-nonfat', amount: 0.5, unit: 'cup' },
+      { ingredientId: 'maple-syrup', amount: 1, unit: 'tsp' },
+    ],
+    steps: [
+      'Blend the milk and oats for 30 seconds.',
+      'Add everything else and blend until smooth.',
+    ],
+  }),
+  smoothie({
+    id: 'pina-colada-smoothie',
+    title: 'Piña Colada',
+    description: 'Pineapple and coconut. Dairy-free.',
+    created_at: '2026-09-06T15:00:00Z',
+    ingredients: [
+      { ingredientId: 'pineapple', amount: 1, unit: 'cup' },
+      { ingredientId: 'banana', amount: 0.5, unit: 'whole' },
+      { ingredientId: 'coconut-water', amount: 0.75, unit: 'cup' },
+      { ingredientId: 'coconut-milk', amount: 0.25, unit: 'cup' },
+      { ingredientId: 'lime-juice', amount: 1, unit: 'tsp' },
+    ],
+    steps: ['Blend everything until smooth and frothy.'],
+  }),
+  smoothie({
+    id: 'cold-brew-banana-smoothie',
+    title: 'Cold Brew Banana',
+    description: 'Coffee and breakfast in one glass.',
+    created_at: '2026-09-07T15:00:00Z',
+    prep_minutes: 5,
+    ingredients: [
+      { ingredientId: 'coffee', amount: 0.75, unit: 'cup', prep: 'chilled' },
+      { ingredientId: 'milk-2', amount: 0.5, unit: 'cup' },
+      { ingredientId: 'banana', amount: 1, unit: 'whole', prep: 'frozen' },
+      { ingredientId: 'whey', amount: 1, unit: 'scoop', prep: 'vanilla' },
+      { ingredientId: 'dates', amount: 1, unit: 'whole', prep: 'pitted' },
+      { ingredientId: 'cinnamon', amount: 0.25, unit: 'tsp' },
+    ],
+    steps: [
+      'Soak the date in the coffee for 5 minutes if it’s dry.',
+      'Blend everything until smooth.',
+    ],
+  }),
+  smoothie({
+    id: 'blueberry-almond-smoothie',
+    title: 'Blueberry Almond',
+    description: 'Dairy-free, no added sugar, very purple.',
+    created_at: '2026-09-08T15:00:00Z',
+    ingredients: [
+      { ingredientId: 'almond-milk', amount: 1, unit: 'cup' },
+      { ingredientId: 'blueberries-frozen', amount: 1, unit: 'cup' },
+      { ingredientId: 'banana', amount: 0.5, unit: 'whole' },
+      { ingredientId: 'almond-butter', amount: 1, unit: 'tbsp' },
+      { ingredientId: 'chia', amount: 1, unit: 'tsp' },
+    ],
+    steps: [
+      'Blend everything except the chia.',
+      'Add the chia and pulse to mix.',
+    ],
+  }),
+  smoothie({
+    id: 'peaches-and-cream-smoothie',
+    title: 'Peaches & Cream',
+    description: 'Peaches with vanilla yogurt.',
+    created_at: '2026-09-09T15:00:00Z',
+    ingredients: [
+      { ingredientId: 'peaches', amount: 1, unit: 'cup' },
+      { ingredientId: 'greek-yogurt-nonfat', amount: 0.75, unit: 'cup' },
+      { ingredientId: 'milk-2', amount: 0.5, unit: 'cup' },
+      { ingredientId: 'vanilla', amount: 0.5, unit: 'tsp' },
+      { ingredientId: 'honey', amount: 1, unit: 'tsp' },
+    ],
+    steps: ['Blend everything until smooth.'],
+  }),
+  smoothie({
+    id: 'cherry-cocoa-smoothie',
+    title: 'Cherry Cocoa',
+    description: 'Chocolate-covered cherry, sweetened with a date.',
+    created_at: '2026-09-10T15:00:00Z',
+    prep_minutes: 4,
+    ingredients: [
+      { ingredientId: 'almond-milk', amount: 1, unit: 'cup' },
+      { ingredientId: 'dates', amount: 1, unit: 'whole', prep: 'pitted' },
+      { ingredientId: 'cocoa', amount: 1, unit: 'tbsp' },
+      { ingredientId: 'cherries-frozen', amount: 1, unit: 'cup' },
+      { ingredientId: 'almond-butter', amount: 1, unit: 'tbsp' },
+    ],
+    steps: [
+      'Blend the almond milk, date, and cocoa until smooth.',
+      'Add the cherries and almond butter and blend until thick.',
+    ],
+  }),
+]

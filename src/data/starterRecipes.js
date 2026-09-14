@@ -1,16 +1,20 @@
+import { bowlRecipes } from './starterBowls.js'
+import { smoothieRecipes } from './starterSmoothies.js'
+
 // Starter recipes that ship with the app. Nutrition is calculated from USDA data
 // in src/lib/recipes.js, per tub. `tested` flips to true once one of us has made it.
 
 const FREEZE = 'Pour into an empty CREAMi pint, staying under the max fill line. Put the lid on and freeze on a level surface for 24 hours.'
 const SPIN = 'Take off the lid, lock the pint into the outer bowl, and run {program}.'
 
-export const starterRecipes = [
+const creamiRecipes = [
   {
     id: 'cold-brew-protein-pint',
     title: 'Cold Brew Protein Pint',
     description: 'A vanilla latte you can scoop.',
     image_url: null,
     created_at: '2026-09-01T12:00:00Z',
+    category: 'creami',
     programs: ['lite_ice_cream'],
     respins: 1,
     mix_in: false,
@@ -38,6 +42,7 @@ export const starterRecipes = [
     image_url: '/recipes/strawberry.webp',
     image_alt: 'Pink strawberry ice cream with strawberries and biscuit crumbs.',
     created_at: '2026-09-02T12:00:00Z',
+    category: 'creami',
     programs: ['ice_cream'],
     respins: 0,
     mix_in: true,
@@ -67,6 +72,7 @@ export const starterRecipes = [
     image_url: '/recipes/mango.webp',
     image_alt: 'Golden mango sorbet in a cream bowl beside mango cubes.',
     created_at: '2026-09-03T12:00:00Z',
+    category: 'creami',
     programs: ['sorbet'],
     respins: 1,
     mix_in: false,
@@ -92,6 +98,7 @@ export const starterRecipes = [
     image_url: '/recipes/peanut.webp',
     image_alt: 'Peanut butter ice cream with a peanut butter drizzle and chopped peanuts.',
     created_at: '2026-09-04T12:00:00Z',
+    category: 'creami',
     programs: ['lite_ice_cream'],
     respins: 1,
     mix_in: false,
@@ -119,6 +126,7 @@ export const starterRecipes = [
     image_url: '/recipes/chocolate.webp',
     image_alt: 'Chocolate ice cream topped with dark chocolate shards.',
     created_at: '2026-09-05T12:00:00Z',
+    category: 'creami',
     programs: ['lite_ice_cream'],
     respins: 1,
     mix_in: true,
@@ -148,6 +156,7 @@ export const starterRecipes = [
     image_url: '/recipes/vanilla.webp',
     image_alt: 'Vanilla bean ice cream in a cream bowl with vanilla pods.',
     created_at: '2026-09-06T12:00:00Z',
+    category: 'creami',
     programs: ['gelato'],
     respins: 0,
     mix_in: false,
@@ -175,6 +184,7 @@ export const starterRecipes = [
     description: 'Light milk-and-yogurt base with crushed cookies.',
     image_url: null,
     created_at: '2026-09-07T12:00:00Z',
+    category: 'creami',
     programs: ['lite_ice_cream'],
     respins: 1,
     mix_in: true,
@@ -201,6 +211,7 @@ export const starterRecipes = [
     description: 'Tart Greek yogurt and blueberries, sweetened with honey.',
     image_url: null,
     created_at: '2026-09-08T12:00:00Z',
+    category: 'creami',
     programs: ['frozen_yogurt', 'lite_ice_cream'],
     respins: 1,
     mix_in: false,
@@ -226,6 +237,7 @@ export const starterRecipes = [
     description: 'Pumpkin, maple, and cinnamon.',
     image_url: null,
     created_at: '2026-09-09T12:00:00Z',
+    category: 'creami',
     programs: ['lite_ice_cream'],
     respins: 1,
     mix_in: true,
@@ -255,6 +267,7 @@ export const starterRecipes = [
     description: 'A thick, spoonable bowl topped with granola.',
     image_url: null,
     created_at: '2026-09-10T12:00:00Z',
+    category: 'creami',
     programs: ['smoothie_bowl', 'sorbet'],
     respins: 0,
     mix_in: false,
@@ -282,6 +295,7 @@ export const starterRecipes = [
     image_url: '/recipes/mint.webp',
     image_alt: 'Mint-green chocolate chip ice cream with fresh mint leaves.',
     created_at: '2026-09-11T12:00:00Z',
+    category: 'creami',
     programs: ['lite_ice_cream'],
     respins: 1,
     mix_in: true,
@@ -306,3 +320,5 @@ export const starterRecipes = [
     tested: false,
   },
 ]
+
+export const starterRecipes = [...creamiRecipes, ...bowlRecipes, ...smoothieRecipes]
