@@ -1,6 +1,12 @@
 # Spinly — Simple React Build Plan
 
-Status: Step 1 complete and verified on September 13, 2026. Step 2 is next.
+Status (September 13, 2026): Steps 1–3 and the app code for Steps 4–5 are built. Step 4's Supabase project setup and Step 6 checks against a live project are still to do.
+
+**Scope changes agreed September 13, 2026** (merging in the earlier `spinlyold` prototype):
+- Recipes come from two places: starter recipes that ship in `src/data/starterRecipes.js` (nutrition calculated from USDA data), plus community recipes that signed-in users submit to Supabase.
+- Added from the prototype: recipe pages that pick the right program for your CREAMi model and scale to its pint size, US/metric units, a pantry matcher, a pint log with freeze countdown and calendar reminders, and saved recipes that sync when signed in.
+- The schema adds `profiles`, `favorites`, and `pint_log` next to `recipes` for synced user data.
+- CREAMi only. Nutrition stays per tub. The UI stays minimal, with no extra explanatory text.
 
 Build a Ninja CREAMi recipe app with React, plain JavaScript, and Supabase. Keep the original core features: browsing, filtering, sorting, recipe details, accounts, recipe submissions, and editing your own recipes.
 

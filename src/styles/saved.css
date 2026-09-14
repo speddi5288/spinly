@@ -1,0 +1,7 @@
+.saved-grid, .saved-empty, .saved-status { margin-top: 36px; }
+.saved-status { color: var(--muted); font-size: 13px; }
+.saved-status .clear-filters { padding-left: 0; }
+
+@media (max-width: 700px) {
+  .saved-grid, .saved-empty, .saved-status { margin-top: 28px; }
+}

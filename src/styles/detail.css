@@ -1,0 +1,123 @@
+/* Recipe detail page */
+.detail-status { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+.detail-status-text { font-size: 18px; }
+
+.detail-back { margin-bottom: 20px; color: var(--muted); }
+
+.detail-header { display: grid; grid-template-columns: 360px minmax(0, 1fr); gap: 48px; align-items: center; }
+.detail-photo { border: 1px solid var(--line); border-radius: 12px; }
+.detail-intro { min-width: 0; }
+.detail-eyebrow { text-transform: uppercase; flex-wrap: wrap; }
+.detail-title { margin-top: 18px; overflow-wrap: anywhere; }
+.detail-description { margin-top: 14px; max-width: 520px; color: var(--muted); font-size: 15px; line-height: 1.7; }
+.detail-tag { display: inline-block; margin-left: 8px; padding: 2px 7px; border: 1px solid #465345; border-radius: 10px; color: var(--muted); font-size: 9px; font-weight: 500; letter-spacing: .8px; text-transform: uppercase; vertical-align: 2px; white-space: nowrap; }
+.detail-eyebrow .detail-tag { margin-left: 4px; vertical-align: baseline; }
+
+.detail-actions { margin-top: 28px; }
+.detail-action-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.detail-button { min-height: 44px; padding-inline: 18px; }
+.detail-save svg { width: 16px; height: 16px; }
+.detail-edit { padding-inline: 8px; color: var(--mint); }
+.detail-confirm { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; min-height: 44px; margin-top: 6px; color: #d0d8ce; font-size: 13px; }
+.detail-confirm:empty { min-height: 0; margin: 0; }
+.detail-confirm .text-link { color: var(--mint); }
+
+.detail-body { display: grid; grid-template-columns: 360px minmax(0, 1fr); gap: 48px; align-items: start; margin-top: 44px; }
+.detail-side, .detail-main { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+.detail-panel { padding: 24px; }
+.detail-heading { margin: 0 0 18px; font-size: 18px; font-weight: 500; letter-spacing: -.3px; }
+.detail-note { margin-top: 10px; color: var(--muted); font-size: 12px; line-height: 1.7; }
+.detail-note strong { color: #d0d8ce; font-weight: 600; }
+
+/* Amounts */
+.detail-amounts { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; padding-bottom: 18px; margin-bottom: 8px; border-bottom: 1px solid var(--line); }
+.detail-stepper { display: flex; align-items: center; gap: 10px; }
+.detail-control-label { color: var(--muted); font-size: 12px; }
+.stepper { display: inline-flex; align-items: center; border: 1px solid #465345; border-radius: 25px; }
+.stepper button { width: 44px; height: 44px; border: 0; border-radius: 50%; background: transparent; color: #dde7d9; font-size: 18px; }
+.stepper button:hover:not(:disabled) { color: var(--mint); }
+.stepper button:disabled { color: #56615a; cursor: default; }
+.stepper output { min-width: 16px; text-align: center; font-size: 14px; font-weight: 600; }
+.detail-tub { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.segmented { display: inline-flex; padding: 3px; border: 1px solid #465345; border-radius: 25px; }
+.segmented button { min-height: 38px; padding: 6px 13px; border: 0; border-radius: 20px; background: transparent; color: #dde7d9; font-size: 12px; }
+.segmented button[aria-pressed='true'] { background: var(--mint); color: #1b2c1c; font-weight: 600; }
+
+/* Ingredients */
+.ingredient-group + .ingredient-group { margin-top: 14px; }
+.ingredient-group-title { margin: 8px 0 2px; color: var(--muted); font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; }
+.ingredient-list { margin: 0; padding: 0; list-style: none; }
+.ingredient-list li { display: flex; align-items: flex-start; gap: 12px; }
+.ingredient-list li + li { border-top: 1px solid #252d27; }
+.ingredient-list input { flex-shrink: 0; width: 18px; height: 18px; margin: 13px 0 0; accent-color: var(--mint); cursor: pointer; }
+.ingredient-list label { flex: 1; min-width: 0; padding-block: 12px; font-size: 14px; line-height: 1.5; cursor: pointer; overflow-wrap: anywhere; }
+.ingredient-amount { color: var(--mint); font-weight: 600; white-space: nowrap; }
+.ingredient-muted { color: var(--muted); }
+.ingredient-list .is-done label { color: #7d877f; text-decoration: line-through; text-decoration-color: #7d877f; }
+.ingredient-list .is-done .ingredient-amount, .ingredient-list .is-done .ingredient-muted { color: #7d877f; }
+
+/* Nutrition */
+.detail-nutrition { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px 12px; margin: 0; }
+.detail-nutrition div { display: flex; flex-direction: column-reverse; gap: 4px; }
+.detail-nutrition dt { color: var(--muted); font-size: 11px; }
+.detail-nutrition dd { margin: 0; color: #e7eddf; font-size: 19px; font-weight: 500; white-space: nowrap; }
+.detail-nutrition dd span { color: var(--muted); font-size: 10px; font-weight: 400; }
+.detail-nutrition div:first-child dd { color: var(--mint); }
+.detail-sources { margin-top: 18px; padding-top: 6px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+.detail-sources summary { display: flex; align-items: center; min-height: 44px; cursor: pointer; }
+.detail-sources summary:hover { color: var(--mint); }
+.detail-sources summary:focus-visible, .detail-sources a:focus-visible { outline: 2px solid var(--mint); outline-offset: 2px; border-radius: 4px; }
+.detail-sources ul { display: grid; gap: 8px; margin: 2px 0 0; padding: 0; list-style: none; }
+.detail-sources a { line-height: 1.6; text-decoration: underline; text-decoration-color: #465345; text-underline-offset: 3px; overflow-wrap: anywhere; }
+.detail-sources a:hover { color: var(--mint); }
+.detail-sources p { margin-top: 12px; line-height: 1.6; }
+
+/* Machine */
+.detail-machine { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px 32px; }
+.detail-field { display: flex; flex-direction: column; gap: 8px; min-width: 0; flex: 1 1 200px; max-width: 280px; }
+.detail-field label { color: var(--muted); font-size: 12px; }
+.detail-field select { width: 100%; min-height: 44px; border: 1px solid #414c41; border-radius: 7px; padding: 10px; background: #151b17; color: #e3e9df; font-size: 13px; color-scheme: dark; }
+.detail-program { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; min-width: 0; }
+.program-lit { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; max-width: 100%; padding: 10px 18px; border: 1px solid #2c362f; border-radius: 25px; background: #0e1210; box-shadow: inset 0 1px 0 #ffffff0d, 0 0 0 1px #00000040; color: #e9f5e4; font-size: 12px; font-weight: 600; letter-spacing: 1.6px; text-transform: uppercase; }
+.program-lit-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 6px 1px #c2e9b7b3, 0 0 14px 2px #c2e9b755; flex-shrink: 0; }
+.program-lit.is-off { color: #7d877f; }
+.program-lit.is-off .program-lit-dot { background: #3c463f; box-shadow: none; }
+.detail-program .detail-note { margin-top: 0; }
+
+/* Steps */
+.detail-meta { margin: -8px 0 6px; color: #b0c5a6; font-size: 12px; letter-spacing: .3px; }
+.detail-steps { margin: 18px 0 0; padding: 0; list-style: none; }
+.detail-steps li { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 12px; padding-block: 14px; }
+.detail-steps li + li { border-top: 1px solid #252d27; }
+.detail-steps .step-number { padding-top: 3px; }
+.detail-steps p { font-size: 14px; line-height: 1.75; color: #dfe6db; overflow-wrap: anywhere; }
+
+@media (min-width: 901px) and (min-height: 760px) {
+  .detail-side { position: sticky; top: 24px; }
+}
+
+@media (max-width: 1050px) {
+  .detail-header, .detail-body { grid-template-columns: 320px minmax(0, 1fr); gap: 32px; }
+}
+
+@media (max-width: 900px) {
+  .detail-header, .detail-body { grid-template-columns: minmax(0, 1fr); }
+  .detail-header { gap: 24px; }
+  .detail-photo { max-width: 520px; aspect-ratio: 16 / 10; }
+  .detail-body { margin-top: 28px; gap: 24px; }
+}
+
+@media (max-width: 700px) {
+  .detail-panel { padding: 18px 16px; }
+  .detail-title { margin-top: 14px; letter-spacing: -1.2px; }
+  .detail-description { font-size: 14px; }
+  .detail-actions { margin-top: 22px; }
+}
+
+@media (max-width: 370px) {
+  .detail-action-row { gap: 8px; }
+  .detail-save { padding-inline: 12px; }
+  .detail-button { padding-inline: 14px; }
+  .detail-nutrition { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .detail-amounts { gap: 10px; }
+}
